@@ -6,7 +6,8 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.compress.CompressionCodecFactory
 
-class HdfsFileMerge(defaultBufferSize: Int = 10240, defaultConfig: Option[Configuration] = None) {
+class HdfsFileMerge(defaultBufferSize: Int = 10240, defaultConfig: Option[Configuration] = None)
+{
 
   private def toAbsolutePath(path: String) = new File(path).getAbsolutePath
 
@@ -18,13 +19,16 @@ class HdfsFileMerge(defaultBufferSize: Int = 10240, defaultConfig: Option[Config
     }
   )
 
-  val fs = FileSystem.get(config)
+  val fs: FileSystem = FileSystem.get(config)
 
-  def merge(inputPathGlob: String, outputFilePath: String): Unit = {
-    HdfsUtils(fs).globFiles(inputPathGlob) match {
+  def merge(inputPathGlob: String, outputFilePath: String): Unit =
+  {
+    HdfsUtils(fs).globFiles(inputPathGlob) match
+    {
       case Nil =>
         throw new RuntimeException(s"No files found for glob pattern " + inputPathGlob)
-      case lst: List[Path] => {
+      case lst: List[Path] =>
+      {
         val codec = new CompressionCodecFactory(config).getCodec(lst.head)
 
         val outputPath =
@@ -40,13 +44,16 @@ class HdfsFileMerge(defaultBufferSize: Int = 10240, defaultConfig: Option[Config
         val buffer = new Array[Byte](defaultBufferSize)
         val totalFiles = lst.size
 
-        lst.zipWithIndex.foreach {
-          case (path, idx) => {
+        lst.zipWithIndex.foreach
+        {
+          case (path, idx) =>
+          {
             println(s"Merging file (${idx + 1}/$totalFiles): $path")
 
             val inputStream = codec.createInputStream(fs.open(path))
             var length = 0
-            while ( {
+            while (
+            {
               length = inputStream.read(buffer, 0, defaultBufferSize)
               length > 0
             })
