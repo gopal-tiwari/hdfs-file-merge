@@ -12,7 +12,6 @@ class HdfsFileMerge(defaultBufferSize: Int = 10240, defaultConfig: Option[Config
 
   val config: Configuration = defaultConfig.getOrElse(
     {
-      //val conf = new Configuration
       config.addResource(new Path("file:///etc/hadoop/conf/core-site.xml"))
       config.addResource(new Path("file:///etc/hadoop/conf/hdfs-site.xml"))
       config
