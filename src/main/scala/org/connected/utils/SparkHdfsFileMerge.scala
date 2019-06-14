@@ -19,6 +19,10 @@ object SparkHdfsFileMerge
         .action((x, c) => c.copy(sourceTable = x)).required()
         .text("Source table which needs to be merged")
 
+      opt[String]('p', "partition")
+        .action((x, c) => c.copy(partition = Some(x))).required()
+        .text("Table partition table which needs to be merged")
+
 
     }
   }
